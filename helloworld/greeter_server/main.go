@@ -23,6 +23,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/pedroarapua/grpc/helloworld/helloworld"
 	"google.golang.org/grpc"
@@ -39,7 +40,8 @@ type server struct {
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	log.Printf("Received: %v", in.GetName())
+	hostname, _ := os.Hostname()
+	log.Printf("Received: %v, Host: %v", in.GetName(), hostname)
 	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
