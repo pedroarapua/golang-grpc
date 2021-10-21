@@ -44,20 +44,21 @@ func getenv(key, fallback string) string {
 
 func main() {
 	address := getenv("API_URL", defaultAddress)
-	for {
-		// Set up a connection to the server.
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-		if err != nil {
-			log.Fatalf("did not connect: %v", err)
-		}
-		defer conn.Close()
-		c := pb.NewGreeterClient(conn)
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewGreeterClient(conn)
 
-		// Contact the server and print out its response.
-		name := defaultName
-		if len(os.Args) > 1 {
-			name = os.Args[1]
-		}
+	// Contact the server and print out its response.
+	name := defaultName
+	if len(os.Args) > 1 {
+		name = os.Args[1]
+	}
+
+	for {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
