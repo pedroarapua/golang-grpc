@@ -30,11 +30,20 @@ import (
 )
 
 const (
-	address     = "localhost:80"
-	defaultName = "world"
+	defaultAddress = "localhost:80"
+	defaultName    = "world"
 )
 
+func getenv(key, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return fallback
+	}
+	return value
+}
+
 func main() {
+	address := getenv("API_URL", defaultAddress)
 	for {
 		// Set up a connection to the server.
 		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
